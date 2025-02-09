@@ -1,13 +1,15 @@
-import { Category } from "../category.entity"
+import { InvalidUuidError, Uuid } from "src/shared/domain/value-objects/uuid.vo"
+import { Category, CategoryId } from "../category.entity"
+import { v7 as uuidv7 } from "uuid";
 
 describe('🧪 Category Unit Tests', () => {
   describe('constructor', () => {
     test('should create a category with default values', () => {
       const category = new Category({
-        categoryId: '123',
+        categoryId: uuidv7(),
         name: 'movie name test'
       })
-      expect(category.categoryId).toBeDefined();
+      expect(category.categoryId).toBeInstanceOf(Uuid);
       expect(category.name).toBe('movie name test');
       expect(category.description).toBeNull();
       expect(category.isActive).toBeTruthy();
@@ -16,13 +18,13 @@ describe('🧪 Category Unit Tests', () => {
     test('should create a category with all values', () => {
       const createdAt = new Date();
       const category = new Category({
-        categoryId: '123',
+        categoryId: uuidv7(),
         name: 'movie name test',
         description: 'movie description test',
         isActive: false,
         createdAt: createdAt
       });
-      expect(category.categoryId).toBeDefined();
+      expect(category.categoryId).toBeInstanceOf(Uuid);
       expect(category.name).toBe('movie name test');
       expect(category.description).toBe('movie description test');
       expect(category.isActive).toBeFalsy();
@@ -35,7 +37,7 @@ describe('🧪 Category Unit Tests', () => {
       const category = Category.create({
         name: 'category name test'
       })
-      expect(category.categoryId).toBeDefined();
+      expect(category.categoryId).toBeInstanceOf(Uuid);
       expect(category.name).toBe('category name test');
       expect(category.description).toBeNull();
       expect(category.isActive).toBeTruthy();
@@ -48,11 +50,20 @@ describe('🧪 Category Unit Tests', () => {
         description: 'category description test',
         isActive: false,
       })
-      expect(category.categoryId).toBeDefined();
+      expect(category.categoryId).toBeInstanceOf(Uuid);
       expect(category.name).toBe('category name test');
       expect(category.description).toBe('category description test');
       expect(category.isActive).toBeFalsy();
       expect(category.createdAt).toBeInstanceOf(Date);
+    })
+  })
+
+  describe('categoryId field', () => {
+    const arrange = [{ id: null }, { id: undefined }, { id: new CategoryId() }];
+
+    test.each(arrange)('should be is %j', (props) => {
+      const category = new Category(props as any);
+      expect(category.categoryId).toBeInstanceOf(CategoryId);
     })
   })
 

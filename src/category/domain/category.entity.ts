@@ -1,6 +1,7 @@
+import { Uuid } from "src/shared/domain/value-objects/uuid.vo";
 
 export type CategoryConstructorProps = {
-  categoryId: string;
+  categoryId?: string;
   name: string;
   description?: string;
   isActive?: boolean;
@@ -13,15 +14,17 @@ export type CategoryCreateProps = {
   isActive?: boolean;
 }
 
+export class CategoryId extends Uuid {} 
+
 export class Category {
-  categoryId: string;
+  categoryId: CategoryId;
   name: string;
   description: string | null;
   isActive: boolean;
   createdAt: Date;
 
   constructor(props: CategoryConstructorProps) {
-    this.categoryId = props.categoryId;
+    this.categoryId = props.categoryId ? new CategoryId(props.categoryId) : new CategoryId();
     this.name = props.name;
     this.description = props.description ?? null;
     this.isActive = props.isActive ?? true;
@@ -29,11 +32,7 @@ export class Category {
   }
 
   static create(props: CategoryCreateProps): Category {
-    const categoryId = '123';
-    return new Category({
-      ...props,
-      categoryId
-    });
+    return new Category(props)
   }
 
   changeName(name: string): void {
@@ -54,7 +53,7 @@ export class Category {
 
   toJSON() {
     return {
-      category_id: this.categoryId,
+      category_id: this.categoryId.id,
       name: this.name,
       description: this.description,
       is_active: this.isActive,
@@ -62,3 +61,7 @@ export class Category {
     };
   }
 }
+
+// const cat = new Category({
+//   categoryId: CategoryId.create()
+// })
