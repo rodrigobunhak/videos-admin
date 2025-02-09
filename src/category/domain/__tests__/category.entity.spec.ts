@@ -3,6 +3,10 @@ import { Category, CategoryId } from "../category.entity"
 import { v7 as uuidv7 } from "uuid";
 
 describe('🧪 Category Unit Tests', () => {
+  let validateSpy: any;
+  beforeEach(() => {
+    validateSpy = jest.spyOn(Category, "validate");
+  });
   describe('constructor', () => {
     test('should create a category with default values', () => {
       const category = new Category({
@@ -42,6 +46,7 @@ describe('🧪 Category Unit Tests', () => {
       expect(category.description).toBeNull();
       expect(category.isActive).toBeTruthy();
       expect(category.createdAt).toBeInstanceOf(Date);
+      expect(validateSpy).toHaveBeenCalledTimes(1);
     })
 
     test('should create a category with all values', () => {
@@ -55,6 +60,7 @@ describe('🧪 Category Unit Tests', () => {
       expect(category.description).toBe('category description test');
       expect(category.isActive).toBeFalsy();
       expect(category.createdAt).toBeInstanceOf(Date);
+      expect(validateSpy).toHaveBeenCalledTimes(1);
     })
   })
 
@@ -73,6 +79,7 @@ describe('🧪 Category Unit Tests', () => {
     })
     category.changeName('name updated');
     expect(category.name).toBe('name updated');
+    expect(validateSpy).toHaveBeenCalledTimes(2);
   })
 
   test('should change description', () => {
@@ -81,6 +88,7 @@ describe('🧪 Category Unit Tests', () => {
     })
     category.changeDescription('description updated');
     expect(category.description).toBe('description updated');
+    expect(validateSpy).toHaveBeenCalledTimes(2);
   })
 
   test('should activate', () => {
