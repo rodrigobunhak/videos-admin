@@ -108,3 +108,110 @@ describe('🧪 Category Unit Tests', () => {
     expect(category.isActive).toBeFalsy();
   })
 })
+
+describe('Category Validator', () => {
+  describe('create method', () => {
+    test('should show error messages when name is null', () => {
+      expect(() => Category.create({ name: null })).containsErrorMessages({
+        name: [
+          'name should not be empty',
+          'name must be a string',
+          'name must be shorter than or equal to 255 characters'
+        ]
+      })
+    })
+
+    test('should show error messages when name is bigger than 255', () => {
+      expect(() => Category.create({ name: 'a'.repeat(256) })).containsErrorMessages({
+        name: [
+          'name must be shorter than or equal to 255 characters'
+        ]
+      })
+    })
+
+    test('should show error messages when name is an empty string', () => {
+      expect(() => Category.create({ name: '' })).containsErrorMessages({
+        name: [
+          'name should not be empty',
+        ]
+      })
+    })
+
+    test('should show error messages when description is an empty string', () => {
+      expect(() => Category.create({ name: 'test', description: '' })).containsErrorMessages({
+        description: [
+          'description should not be empty',
+        ]
+      })
+    })
+
+    test('should show error messages when isActive is not a boolean', () => {
+      expect(() => Category.create({ name: 'test', isActive: 'abc' as any })).containsErrorMessages({
+        isActive: [
+          'isActive must be a boolean value',
+        ]
+      })
+      expect(() => Category.create({ name: 'test', isActive: 123 as any })).containsErrorMessages({
+        isActive: [
+          'isActive must be a boolean value',
+        ]
+      })
+      expect(() => Category.create({ name: 'test', isActive: {} as any })).containsErrorMessages({
+        isActive: [
+          'isActive must be a boolean value',
+        ]
+      })
+    })
+  })
+
+  describe('changeName method', () => {
+    test('should show error messages when name is null', () => {
+      const category = Category.create({ name: 'category name test' });
+      expect(() => category.changeName(null)).containsErrorMessages({
+        name: [
+          'name should not be empty',
+          'name must be a string',
+          'name must be shorter than or equal to 255 characters'
+        ]
+      })
+    })
+
+    test('should show error messages when name is bigger than 255', () => {
+      const category = Category.create({ name: 'category name test' });
+      expect(() => category.changeName('a'.repeat(256))).containsErrorMessages({
+        name: [
+          'name must be shorter than or equal to 255 characters'
+        ]
+      })
+    })
+
+    test('should show error messages when name is an empty string', () => {
+      const category = Category.create({ name: 'category name test' });
+      expect(() => category.changeName('')).containsErrorMessages({
+        name: [
+          'name should not be empty',
+        ]
+      })
+    })
+  })
+
+  describe('changeDescription method', () => {
+    test('should show error messages when description is an empty string', () => {
+      const category = Category.create({ name: 'category test name'});
+      expect(() => category.changeDescription('')).containsErrorMessages({
+        description: [
+          'description should not be empty',
+        ]
+      })
+    })
+
+    test('should show error messages when description is not a string', () => {
+      const category = Category.create({ name: 'category test name'});
+      expect(() => category.changeDescription(5 as any)).containsErrorMessages({
+        description: [
+          'description must be a string',
+        ]
+      })
+    })
+  })
+})

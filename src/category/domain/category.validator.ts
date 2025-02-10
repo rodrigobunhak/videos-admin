@@ -15,6 +15,7 @@ class CategoryRules {
   name: string;
 
   @IsString()
+  @IsNotEmpty()
   @IsOptional()
   description: string | null;
 
