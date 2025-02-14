@@ -77,14 +77,15 @@ export class SearchParams<Filter = string> extends ValueObject {
       return;
     }
     const dir = `${value}`.toLowerCase();
-    this._sortDir = dir !== 'asc' && dir !== 'desc' ? 'asc' : dir;
+    const isValidDirection = dir === 'asc' || dir === 'desc';
+    this._sortDir = isValidDirection ? dir : 'asc';
   }
 
   get filter(): Filter | null {
     return this._filter;
   }
 
-  protected set filter(value: Filter | null) {
+  private set filter(value: Filter | null) {
     this._filter =
       value === null || value === undefined || (value as unknown) === ''
         ? null
