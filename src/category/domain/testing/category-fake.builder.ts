@@ -1,12 +1,11 @@
 import { Chance } from "chance";
-import { Category } from "../category.entity";
-import { Uuid } from "../../../shared/domain/value-objects/uuid.vo";
+import { Category, CategoryId } from "../category.entity";
 
 type PropOrFactory<T> = T | ((index: number) => T);
 
 export class CategoryFakeBuilder<TBuild> {
 
-  private _categoryId: PropOrFactory<Uuid> | undefined = undefined;
+  private _categoryId: PropOrFactory<CategoryId> | undefined = undefined;
   private _name: PropOrFactory<string> = (_index) => this.chance.word();
   private _description: PropOrFactory<string | null> = (_index) => this.chance.paragraph();
   private _isActive: PropOrFactory<boolean> = (_index) => true;
@@ -15,12 +14,10 @@ export class CategoryFakeBuilder<TBuild> {
   private countObjs: number;
   private chance: Chance.Chance;
 
-  // Cria apenas uma categoria
   static aCategory() {
     return new CategoryFakeBuilder<Category>();
   }
 
-  // Cria varias categorias passando a quantidade desejada
   static theCategories(countObjs: number) {
     return new CategoryFakeBuilder<Category[]>(countObjs);
   }
@@ -30,7 +27,7 @@ export class CategoryFakeBuilder<TBuild> {
     this.chance = Chance();
   }
 
-  public withUuid(valueOrFactory: PropOrFactory<Uuid>) {
+  public withId(valueOrFactory: PropOrFactory<CategoryId>) {
     this._categoryId = valueOrFactory;
     return this;
   }
@@ -74,11 +71,8 @@ export class CategoryFakeBuilder<TBuild> {
           name: this.callFactory(this._name, index),
           description: this.callFactory(this._description, index),
           isActive: this.callFactory(this._isActive, index),
-          ...(this._createdAt && {
-            created_at: this.callFactory(this._createdAt, index),
-          }),
+          createdAt: !this._createdAt ? undefined : this.callFactory(this._createdAt, index),
         });
-        // category.validate();
         return category;
       });
     if (this.countObjs === 1) {

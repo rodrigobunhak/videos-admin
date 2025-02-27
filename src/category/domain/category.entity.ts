@@ -6,16 +6,16 @@ import { ValueObject } from "src/shared/domain/value-object";
 import { CategoryFakeBuilder } from "./testing/category-fake.builder";
 
 export type CategoryConstructorProps = {
-  categoryId?: string;
+  categoryId?: CategoryId;
   name: string;
-  description?: string;
+  description?: string | null;
   isActive?: boolean;
   createdAt?: Date;
 }
 
 export type CategoryCreateProps = {
   name: string;
-  description?: string;
+  description?: string | null;
   isActive?: boolean;
 }
 
@@ -30,7 +30,7 @@ export class Category extends Entity {
 
   constructor(props: CategoryConstructorProps) {
     super();
-    this.categoryId = props.categoryId ? new CategoryId(props.categoryId) : new CategoryId();
+    this.categoryId = props.categoryId ?? new CategoryId();
     this.name = props.name;
     this.description = props.description ?? null;
     this.isActive = props.isActive ?? true;

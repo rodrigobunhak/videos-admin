@@ -2,7 +2,7 @@ import { InvalidUuidError, Uuid } from "src/shared/domain/value-objects/uuid.vo"
 import { Category, CategoryId } from "../category.entity"
 import { v7 as uuidv7 } from "uuid";
 
-describe('🧪 Category Unit Tests', () => {
+describe('Category Unit Tests', () => {
   let validateSpy: any;
   beforeEach(() => {
     validateSpy = jest.spyOn(Category, "validate");
@@ -10,7 +10,7 @@ describe('🧪 Category Unit Tests', () => {
   describe('constructor', () => {
     test('should create a category with default values', () => {
       const category = new Category({
-        categoryId: uuidv7(),
+        categoryId: new CategoryId(),
         name: 'movie name test'
       })
       expect(category.categoryId).toBeInstanceOf(Uuid);
@@ -22,7 +22,7 @@ describe('🧪 Category Unit Tests', () => {
     test('should create a category with all values', () => {
       const createdAt = new Date();
       const category = new Category({
-        categoryId: uuidv7(),
+        categoryId: new CategoryId(),
         name: 'movie name test',
         description: 'movie description test',
         isActive: false,
